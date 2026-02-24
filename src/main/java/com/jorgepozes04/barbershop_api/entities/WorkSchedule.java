@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name="work_schedules")
@@ -19,10 +19,11 @@ public class WorkSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private LocalDateTime breakStartTime;
-    private LocalDateTime breakEndTime;
+    private Day dayOfWeek;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LocalTime breakStartTime;
+    private LocalTime breakEndTime;
 
     @ManyToOne
     @JoinColumn(name = "barber_id")
