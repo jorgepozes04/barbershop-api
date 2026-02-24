@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -22,6 +23,9 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+    @ManyToOne
+    @JoinColumn(name = "barber_id")
+    private Barber barber;
     @ManyToOne
     @JoinColumn(name = "service_id")
     private Service service;
