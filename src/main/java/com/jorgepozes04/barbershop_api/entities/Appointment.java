@@ -32,11 +32,10 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(Status status, LocalDateTime endTime, LocalDateTime startTime, Barber barber, Client client) {
+    public Appointment(Status status, LocalDateTime endTime, LocalDateTime startTime, Client client) {
         this.status = status;
         this.endTime = endTime;
         this.startTime = startTime;
-        this.barber = barber;
         this.client = client;
     }
 
@@ -54,14 +53,6 @@ public class Appointment {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public Barber getBarber() {
-        return barber;
-    }
-
-    public void setBarber(Barber barber) {
-        this.barber = barber;
     }
 
     public LocalDateTime getStartTime() {
