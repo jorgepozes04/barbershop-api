@@ -2,10 +2,18 @@ package com.jorgepozes04.barbershop_api.entities;
 
 import com.jorgepozes04.barbershop_api.enums.Status;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,62 +28,4 @@ public class Appointment {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Status status;
-
-    public Service getService() {
-        return service;
-    }
-
-    public void setService(Service service) {
-        this.service = service;
-    }
-
-    public Appointment() {
-    }
-
-    public Appointment(Status status, LocalDateTime endTime, LocalDateTime startTime, Client client) {
-        this.status = status;
-        this.endTime = endTime;
-        this.startTime = startTime;
-        this.client = client;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }
