@@ -3,10 +3,12 @@ package com.jorgepozes04.barbershop_api.service;
 import com.jorgepozes04.barbershop_api.dto.AppointmentGuestDTO;
 import com.jorgepozes04.barbershop_api.entities.WorkSchedule;
 import com.jorgepozes04.barbershop_api.enums.Day;
+import com.jorgepozes04.barbershop_api.enums.Role;
 import com.jorgepozes04.barbershop_api.enums.Status;
 import com.jorgepozes04.barbershop_api.repository.*;
 import com.jorgepozes04.barbershop_api.entities.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,21 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Service
+@RequiredArgsConstructor
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final WorkScheduleRepository workScheduleRepository;
     private final ServiceRepository serviceRepository;
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
-
-    public AppointmentService(AppointmentRepository appointmentRepository, WorkScheduleRepository workScheduleRepository, ServiceRepository serviceRepository, UserRepository userRepository, ClientRepository clientRepository){
-
-        this.appointmentRepository = appointmentRepository;
-        this.workScheduleRepository = workScheduleRepository;
-        this.serviceRepository = serviceRepository;
-        this.userRepository = userRepository;
-        this.clientRepository = clientRepository;
-    }
+    private final BarberRepository barberRepository;
 
     public List<LocalTime> getAvailableTimeSlots(Long barberID, Long serviceID, LocalDate date) {
         Day weekDay = Day.valueOf(date.getDayOfWeek().name());
@@ -97,12 +92,13 @@ public class AppointmentService {
                     newClient.setPhoneNumber(dto.getClientPhoneNumber());
                     newClient.setCpf(dto.getClientCpf());
                     newClient.setName(dto.getClientName());
+                    newClient.setRole(Role.CUSTOMER);
                     return clientRepository.save(newClient);
                 });
         Appointment appointment = new Appointment();
         appointment.setClient(client);
         appointment.setService(serviceRepository.findById(dto.getServiceId()).orElseThrow());
-        appointment.setBarber((Barber) userRepository.findById(dto.getBarberId()).orElseThrow());
+        appointment.setBarber(barberRepository.findById(dto.getBarberId()).orElseThrow());
         appointment.setStartTime(dto.getDateTime());
         appointment.setEndTime(endTime);
         appointment.setStatus(Status.PENDING);
