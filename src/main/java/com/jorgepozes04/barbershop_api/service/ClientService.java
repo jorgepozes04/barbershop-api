@@ -6,7 +6,6 @@ import com.jorgepozes04.barbershop_api.repository.ClientRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class ClientService {
 
     public ClientDTO register(ClientDTO clientDTO) {
         Client client = new Client();
-        return getClientDTO(clientDTO, client);
+        return saveAndMapToDTO(clientDTO, client);
     }
 
     public List<ClientDTO> getAllClients() {
@@ -57,11 +56,11 @@ public class ClientService {
 
     public ClientDTO updateClient(Long id, @Valid ClientDTO clientDTO) {
         Client client = clientRepository.findById(id).orElseThrow();
-        return getClientDTO(clientDTO, client);
+        return saveAndMapToDTO(clientDTO, client);
     }
 
     @NonNull
-    private ClientDTO getClientDTO(@Valid ClientDTO clientDTO, Client client) {
+    private ClientDTO saveAndMapToDTO(@Valid ClientDTO clientDTO, Client client) {
         client.setName(clientDTO.getName());
         client.setCpf(clientDTO.getCpf());
         client.setPhoneNumber(clientDTO.getPhoneNumber());

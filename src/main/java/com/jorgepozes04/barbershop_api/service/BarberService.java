@@ -17,25 +17,26 @@ public class BarberService {
     public BarberDTO register(BarberDTO barberDTO) {
         Barber barber = new Barber();
         barber.setName(barberDTO.getName());
+        barber.setUserCredentials(barberDTO.getUserCredentials());
         Barber savedBarber = barberRepository.save(barber);
-        return new BarberDTO(savedBarber.getId(), savedBarber.getName());
+        return new BarberDTO(savedBarber.getId(), savedBarber.getName(), savedBarber.getUserCredentials());
     }
 
     public List<BarberDTO> getAllBarbers() {
         List<Barber> barbers = barberRepository.findAll();
         return barbers.stream()
-                .map(barber -> new BarberDTO(barber.getId(), barber.getName()))
+                .map(barber -> new BarberDTO(barber.getId(), barber.getName(), barber.getUserCredentials()))
                 .toList();
     }
 
     public BarberDTO getBarberById(Long id) {
         Barber barber = barberRepository.findById(id).orElseThrow();
-        return new BarberDTO(barber.getId(), barber.getName());
+        return new BarberDTO(barber.getId(), barber.getName(),barber.getUserCredentials());
     }
 
     public BarberDTO getBarberByCpf(String cpf) {
         Barber barber = barberRepository.findByCpf(cpf).orElseThrow();
-        return new BarberDTO(barber.getId(), barber.getName());
+        return new BarberDTO(barber.getId(), barber.getName(), barber.getUserCredentials());
     }
 
     public void deleteBarberById(Long id) {
@@ -47,6 +48,6 @@ public class BarberService {
         Barber barber = barberRepository.findById(id).orElseThrow();
         barber.setName(barberDTO.getName());
         Barber updatedBarber = barberRepository.save(barber);
-        return new BarberDTO(updatedBarber.getId(), updatedBarber.getName());
+        return new BarberDTO(updatedBarber.getId(), updatedBarber.getName(), updatedBarber.getUserCredentials());
     }
 }

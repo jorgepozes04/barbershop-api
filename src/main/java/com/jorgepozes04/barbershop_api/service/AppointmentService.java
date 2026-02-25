@@ -65,7 +65,7 @@ public class AppointmentService {
                 availableSlots.add(currentTime);
             }
 
-            currentTime = currentTime.plusMinutes(30);
+            currentTime = currentTime.plusMinutes(15);
         }
 
         return availableSlots;

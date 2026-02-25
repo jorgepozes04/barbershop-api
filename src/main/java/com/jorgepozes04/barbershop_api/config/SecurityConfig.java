@@ -33,8 +33,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/appointments/book").permitAll() // Agendar sem login
                         .requestMatchers(HttpMethod.GET, "/appointments/available-slots").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/barbers").hasRole("ADMIN")
-                        .requestMatchers("/clients/me/**").hasRole("CLIENT")
+                        .requestMatchers(HttpMethod.POST, "/barbers").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/clients/me/**").hasAuthority("ROLE_CLIENT")
 
                         .anyRequest().authenticated()
                 )
