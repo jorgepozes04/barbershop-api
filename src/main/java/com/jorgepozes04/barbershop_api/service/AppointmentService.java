@@ -3,7 +3,6 @@ package com.jorgepozes04.barbershop_api.service;
 import com.jorgepozes04.barbershop_api.dto.AppointmentGuestDTO;
 import com.jorgepozes04.barbershop_api.entities.WorkSchedule;
 import com.jorgepozes04.barbershop_api.enums.Day;
-import com.jorgepozes04.barbershop_api.enums.Role;
 import com.jorgepozes04.barbershop_api.enums.Status;
 import com.jorgepozes04.barbershop_api.repository.*;
 import com.jorgepozes04.barbershop_api.entities.*;
@@ -91,7 +90,6 @@ public class AppointmentService {
                     newClient.setPhoneNumber(dto.getClientPhoneNumber());
                     newClient.setCpf(dto.getClientCpf());
                     newClient.setName(dto.getClientName());
-                    newClient.setRole(Role.CUSTOMER);
                     return clientRepository.save(newClient);
                 });
         Appointment appointment = new Appointment();

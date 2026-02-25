@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientDTO {
+    private Long id;
     @NotBlank
     private String name;
     @CPF

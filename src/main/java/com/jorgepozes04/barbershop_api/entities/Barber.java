@@ -1,9 +1,9 @@
 package com.jorgepozes04.barbershop_api.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -11,5 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Barber extends User {
+@NoArgsConstructor
+public class Barber {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String cpf;
 }
