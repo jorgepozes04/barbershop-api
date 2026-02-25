@@ -16,6 +16,9 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
+    private UserCredentials userCredentials;
     private String name;
     private String cpf;
     private String phoneNumber;
