@@ -1,6 +1,7 @@
 package com.jorgepozes04.barbershop_api.controller;
 
 import com.jorgepozes04.barbershop_api.dto.BarberDTO;
+import com.jorgepozes04.barbershop_api.dto.BarberResponseDTO;
 import com.jorgepozes04.barbershop_api.service.BarberService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,13 +23,13 @@ public class BarberController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BarberDTO>> getAllBarbers() {
+    public ResponseEntity<List<BarberResponseDTO>> getAllBarbers() {
         return ResponseEntity.ok(barberService.getAllBarbers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BarberDTO> getBarberById(@PathVariable Long id) {
-        BarberDTO barber = barberService.getBarberById(id);
+    public ResponseEntity<BarberResponseDTO> getBarberById(@PathVariable Long id) {
+        BarberResponseDTO barber = barberService.getBarberById(id);
         if (barber != null) {
             return ResponseEntity.ok(barber);
         } else {
@@ -37,8 +38,8 @@ public class BarberController {
     }
 
     @GetMapping("/cpf/{cpf}")
-    public ResponseEntity<BarberDTO> getBarberByCpf(@PathVariable String cpf) {
-        BarberDTO barber = barberService.getBarberByCpf(cpf);
+    public ResponseEntity<BarberResponseDTO> getBarberByCpf(@PathVariable String cpf) {
+        BarberResponseDTO barber = barberService.getBarberByCpf(cpf);
         if (barber != null) {
             return ResponseEntity.ok(barber);
         } else {
@@ -57,9 +58,9 @@ public class BarberController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<BarberDTO> updateBarber(@PathVariable Long id, @RequestBody @Valid BarberDTO barberDTO) {
+    public ResponseEntity<BarberResponseDTO> updateBarber(@PathVariable Long id, @RequestBody @Valid BarberDTO barberDTO) {
         try {
-            BarberDTO updatedBarber = barberService.updateBarber(id, barberDTO);
+            BarberResponseDTO updatedBarber = barberService.updateBarber(id, barberDTO);
             return ResponseEntity.ok(updatedBarber);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
