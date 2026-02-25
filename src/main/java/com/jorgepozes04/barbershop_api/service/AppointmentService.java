@@ -22,7 +22,6 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final WorkScheduleRepository workScheduleRepository;
     private final ServiceRepository serviceRepository;
-    private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final BarberRepository barberRepository;
 
