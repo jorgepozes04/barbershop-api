@@ -20,7 +20,7 @@ import java.util.List;
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final WorkScheduleRepository workScheduleRepository;
-    private final ServiceRepository serviceRepository;
+    private final ServiceOfferedRepository serviceOfferedRepository;
     private final ClientRepository clientRepository;
     private final BarberRepository barberRepository;
 
@@ -30,8 +30,8 @@ public class AppointmentService {
         WorkSchedule schedule = workScheduleRepository.findByBarberIdAndDayOfWeek(barberID, weekDay)
                 .orElseThrow(() -> new RuntimeException("Barber is not working on this day"));
 
-        Service service = serviceRepository.findById(serviceID)
-                .orElseThrow(() -> new RuntimeException("Service not found"));
+        ServiceOffered serviceOffered = serviceOfferedRepository.findById(serviceID)
+                .orElseThrow(() -> new RuntimeException("ServiceOffered not found"));
 
         LocalDateTime startOfDay = date.atTime(schedule.getStartTime());
         LocalDateTime endOfDay = date.atTime(schedule.getEndTime());
@@ -39,7 +39,7 @@ public class AppointmentService {
 
         List<LocalTime> availableSlots = new ArrayList<>();
         LocalTime currentTime = schedule.getStartTime();
-        int serviceDuration = service.getDuration();
+        int serviceDuration = serviceOffered.getDuration();
 
         while (currentTime.plusMinutes(serviceDuration).isBefore(schedule.getEndTime()) ||
                 currentTime.plusMinutes(serviceDuration).equals(schedule.getEndTime()))
@@ -74,7 +74,7 @@ public class AppointmentService {
     @Transactional
     public Appointment bookAppointment(AppointmentGuestDTO dto) {
         LocalDateTime endTime = dto.getDateTime().plusMinutes(
-                serviceRepository.findById(dto.getServiceId()).get().getDuration()
+                serviceOfferedRepository.findById(dto.getServiceId()).get().getDuration()
         );
 
         boolean conflict = appointmentRepository.existsByBarberIdAndStartTimeLessThanAndEndTimeGreaterThan(
@@ -94,7 +94,7 @@ public class AppointmentService {
                 });
         Appointment appointment = new Appointment();
         appointment.setClient(client);
-        appointment.setService(serviceRepository.findById(dto.getServiceId()).orElseThrow());
+        appointment.setServiceOffered(serviceOfferedRepository.findById(dto.getServiceId()).orElseThrow());
         appointment.setBarber(barberRepository.findById(dto.getBarberId()).orElseThrow());
         appointment.setStartTime(dto.getDateTime());
         appointment.setEndTime(endTime);

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -28,7 +27,7 @@ public class Appointment {
     private Barber barber;
     @ManyToOne
     @JoinColumn(name = "service_id")
-    private Service service;
+    private ServiceOffered serviceOffered;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Status status;

@@ -1,6 +1,7 @@
-package com.jorgepozes04.barbershop_api.entities;
+package com.jorgepozes04.barbershop_api.dto;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,18 +9,20 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "services")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Service {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ServiceOfferedDTO {
     private Long id;
+    @NotNull
+    @NotBlank
     private String name;
-    private String description;
+    @NotNull
+    @NotBlank
     private BigDecimal price;
+    @NotNull
+    @NotBlank
     private Integer duration;
+    private String description;
 }
