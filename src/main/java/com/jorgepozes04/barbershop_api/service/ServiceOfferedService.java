@@ -16,6 +16,6 @@ public class ServiceOfferedService {
         service.setName(serviceOfferedDTO.getName());
         service.setPrice(serviceOfferedDTO.getPrice());
         ServiceOffered savedService = serviceOfferedRepository.save(service);
-        return new ServiceOfferedDTO(savedService.getName(), savedService.getPrice(), savedService.getDuration(), savedService.getDescription());
+        return new ServiceOfferedDTO(savedService.getId(), savedService.getName(), savedService.getPrice(), savedService.getDuration(), savedService.getDescription());
     }
 }
