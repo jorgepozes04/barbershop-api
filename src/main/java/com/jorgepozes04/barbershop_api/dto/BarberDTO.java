@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BarberDTO {
-    private Long id;
     private String name;
     private UserCredentials userCredentials;
 }

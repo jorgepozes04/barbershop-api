@@ -31,7 +31,7 @@ public class BarberService {
 
         barber.setUserCredentials(credentials);
         Barber savedBarber = barberRepository.save(barber);
-        return new BarberDTO(savedBarber.getId(), savedBarber.getName(), savedBarber.getUserCredentials());
+        return new BarberDTO(savedBarber.getName(), savedBarber.getUserCredentials());
     }
 
     public List<BarberResponseDTO> getAllBarbers() {
