@@ -18,7 +18,7 @@ public class BarberController {
     private final BarberService barberService;
 
     @PostMapping
-    public ResponseEntity<BarberDTO> createBarber(@RequestBody BarberDTO barberDTO) {
+    public ResponseEntity<BarberResponseDTO> createBarber(@RequestBody BarberDTO barberDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(barberService.register(barberDTO));
     }
 

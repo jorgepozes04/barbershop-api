@@ -20,18 +20,18 @@ public class BarberService {
     private final BarberRepository barberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public BarberDTO register(BarberDTO barberDTO) {
+    public BarberResponseDTO register(BarberDTO barberDTO) {
         Barber barber = new Barber();
         barber.setName(barberDTO.getName());
 
-        UserCredentials credentials = barberDTO.getUserCredentials();
+        UserCredentials credentials = new UserCredentials();
+        credentials.setUsername(barberDTO.getUsername());
         credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
-        barber.setUserCredentials(credentials);
         credentials.setRole(Role.BARBER);
 
         barber.setUserCredentials(credentials);
         Barber savedBarber = barberRepository.save(barber);
-        return new BarberDTO(savedBarber.getName(), savedBarber.getUserCredentials());
+        return new BarberResponseDTO(savedBarber.getId(), savedBarber.getName(), savedBarber.getCpf());
     }
 
     public List<BarberResponseDTO> getAllBarbers() {

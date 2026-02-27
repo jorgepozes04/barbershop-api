@@ -1,6 +1,7 @@
 package com.jorgepozes04.barbershop_api.service;
 
 import com.jorgepozes04.barbershop_api.dto.BarberDTO;
+import com.jorgepozes04.barbershop_api.dto.BarberResponseDTO;
 import com.jorgepozes04.barbershop_api.entities.Barber;
 import com.jorgepozes04.barbershop_api.entities.UserCredentials;
 import com.jorgepozes04.barbershop_api.enums.Role;
@@ -32,12 +33,12 @@ class BarberServiceTest {
         userCredentials.setPassword("password123");
         userCredentials.setRole(Role.BARBER);
 
-        BarberDTO inputDTO = new BarberDTO(null, "Theodoro", userCredentials);
+        BarberDTO inputDTO = new BarberDTO("Theodoro", userCredentials);
 
         Barber savedBarber = new Barber(1L, userCredentials, "Theodoro", "12345678900");
         when(barberRepository.save(any(Barber.class))).thenReturn(savedBarber);
 
-        BarberDTO result = barberService.register(inputDTO);
+        BarberResponseDTO result = barberService.register(inputDTO);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
