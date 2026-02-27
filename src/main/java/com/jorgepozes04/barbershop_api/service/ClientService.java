@@ -8,7 +8,8 @@ import lombok.AllArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @AllArgsConstructor
@@ -20,15 +21,15 @@ public class ClientService {
         return saveAndMapToDTO(clientDTO, client);
     }
 
-    public List<ClientDTO> getAllClients() {
-        List<Client> clients = clientRepository.findAll();
-        return clients.stream().map(client -> {
+    public Page<ClientDTO> getAllClients(Pageable pageable) {
+        Page<Client> clients = clientRepository.findAll(pageable);
+        return clients.map(client -> {
             ClientDTO dto = new ClientDTO();
             dto.setName(client.getName());
             dto.setCpf(client.getCpf());
             dto.setPhoneNumber(client.getPhoneNumber());
             return dto;
-        }).toList();
+        });
     }
 
     public ClientDTO getClientByCpf(String cpf) {

@@ -1,10 +1,13 @@
 package com.jorgepozes04.barbershop_api.controller;
 
+import com.jorgepozes04.barbershop_api.dto.ClientSignupDTO;
 import com.jorgepozes04.barbershop_api.dto.LoginDTO;
 import com.jorgepozes04.barbershop_api.dto.TokenResponseDTO;
 import com.jorgepozes04.barbershop_api.entities.UserCredentials;
+import com.jorgepozes04.barbershop_api.service.AuthService;
 import com.jorgepozes04.barbershop_api.service.TokenService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,12 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private TokenService tokenService;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
+    private final AuthService authService;
+
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDTO> login(@RequestBody @Valid LoginDTO data) {
@@ -31,5 +35,11 @@ public class AuthController {
         var token = tokenService.generateToken((UserCredentials) auth.getPrincipal());
 
         return ResponseEntity.ok(new TokenResponseDTO(token));
+    }
+
+    @PostMapping("/client-signup")
+    public ResponseEntity<Void> registerClient(@RequestBody @Valid ClientSignupDTO data) {
+        authService.registerClient(data.getCpf(), data.getPassword(), data.getName(), data.getPhoneNumber());
+        return ResponseEntity.ok().build();
     }
 }

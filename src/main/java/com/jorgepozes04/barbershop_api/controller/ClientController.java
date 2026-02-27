@@ -4,6 +4,9 @@ import com.jorgepozes04.barbershop_api.dto.ClientDTO;
 import com.jorgepozes04.barbershop_api.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +27,9 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClientDTO>> getAllClients() {
-        List<ClientDTO> clients = clientService.getAllClients();
+    public ResponseEntity<Page<ClientDTO>> getAllClients(
+            @PageableDefault(size = 10, page = 0, sort = "name") Pageable pageable) {
+        Page<ClientDTO> clients = clientService.getAllClients(pageable);
         return ResponseEntity.ok(clients);
     }
 
