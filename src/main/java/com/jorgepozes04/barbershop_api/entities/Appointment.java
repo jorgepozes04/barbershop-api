@@ -31,4 +31,6 @@ public class Appointment {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Status status;
+    @ManyToOne
+    private Barbershop barbershop;
 }

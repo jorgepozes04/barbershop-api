@@ -22,4 +22,6 @@ public class Client {
     private String name;
     private String cpf;
     private String phoneNumber;
+    @ManyToOne
+    private Barbershop barbershop;
 }

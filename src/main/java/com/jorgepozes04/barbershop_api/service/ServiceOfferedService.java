@@ -6,6 +6,8 @@ import com.jorgepozes04.barbershop_api.repository.ServiceOfferedRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ServiceOfferedService {
@@ -18,6 +20,13 @@ public class ServiceOfferedService {
         service.setDuration(serviceOfferedDTO.getDuration());
         service.setDescription(serviceOfferedDTO.getDescription());
         ServiceOffered savedService = serviceOfferedRepository.save(service);
-        return new ServiceOfferedDTO(savedService.getId(), savedService.getName(), savedService.getPrice(), savedService.getDuration(), savedService.getDescription());
+        return new ServiceOfferedDTO(savedService.getName(), savedService.getPrice(), savedService.getDuration(), savedService.getDescription());
+    }
+
+    public List<ServiceOfferedDTO> getAll(Long barbershopId) {
+        List<ServiceOffered> services = serviceOfferedRepository.findByBarbershopId(barbershopId);
+        return services.stream()
+                .map(service -> new ServiceOfferedDTO(service.getName(), service.getPrice(), service.getDuration(), service.getDescription()))
+                .toList();
     }
 }

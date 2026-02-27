@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ServiceOfferedDTO {
-    private Long id;
     @NotNull
     @NotBlank
     private String name;

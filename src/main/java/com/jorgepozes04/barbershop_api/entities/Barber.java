@@ -24,4 +24,6 @@ public class Barber {
     private String name;
     @Column(unique = true)
     private String cpf;
+    @ManyToOne
+    private Barbershop barbershop;
 }
