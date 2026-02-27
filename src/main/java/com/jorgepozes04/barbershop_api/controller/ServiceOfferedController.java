@@ -1,7 +1,6 @@
 package com.jorgepozes04.barbershop_api.controller;
 
 import com.jorgepozes04.barbershop_api.dto.ServiceOfferedDTO;
-import com.jorgepozes04.barbershop_api.entities.ServiceOffered;
 import com.jorgepozes04.barbershop_api.service.ServiceOfferedService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,9 +21,9 @@ public class ServiceOfferedController {
         return ResponseEntity.status(HttpStatus.CREATED).body(serviceOffered);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<List<ServiceOfferedDTO>> getAll(@PathVariable Long BarbershopId){
-        List<ServiceOfferedDTO> services = serviceService.getAll(BarbershopId);
+    @GetMapping("{barbershopId}")
+    public ResponseEntity<List<ServiceOfferedDTO>> getAll(@PathVariable Long barbershopId){
+        List<ServiceOfferedDTO> services = serviceService. getAll(barbershopId);
         return ResponseEntity.ok(services);
 
     }
