@@ -1,5 +1,6 @@
 package com.jorgepozes04.barbershop_api.service;
 
+import com.jorgepozes04.barbershop_api.dto.AppointmentResponseDTO;
 import com.jorgepozes04.barbershop_api.dto.AppointmentGuestDTO;
 import com.jorgepozes04.barbershop_api.entities.WorkSchedule;
 import com.jorgepozes04.barbershop_api.enums.Day;
@@ -8,6 +9,7 @@ import com.jorgepozes04.barbershop_api.repository.*;
 import com.jorgepozes04.barbershop_api.entities.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -101,5 +103,53 @@ public class AppointmentService {
         appointment.setStatus(Status.PENDING);
 
         return appointmentRepository.save(appointment);
+    }
+
+    public List<AppointmentResponseDTO> getAllAppointmentsByBarber(Long barberId) {
+        List<Appointment> appointments = appointmentRepository.findByBarberId(barberId);
+        return getAppointmentResponseDTOS(appointments);
+    }
+
+    public List<AppointmentResponseDTO> getAppointmentsByClientId(Long clientId) {
+        List<Appointment> appointments = appointmentRepository.findAll().stream()
+                .filter(ap -> ap.getClient().getId().equals(clientId))
+                .toList();
+
+        return getAppointmentResponseDTOS(appointments);
+    }
+
+    private List<AppointmentGuestDTO> getAppointmentGuestDTOS(List<Appointment> appointments) {
+        List<AppointmentGuestDTO> appointmentDTOs = new ArrayList<>();
+
+        for (Appointment ap : appointments) {
+            AppointmentGuestDTO dto = new AppointmentGuestDTO();
+            dto.setBarberId(ap.getBarber().getId());
+            dto.setServiceId(ap.getServiceOffered().getId());
+            dto.setDateTime(ap.getStartTime());
+            dto.setClientCpf(ap.getClient().getCpf());
+            dto.setClientName(ap.getClient().getName());
+            dto.setClientPhoneNumber(ap.getClient().getPhoneNumber());
+            appointmentDTOs.add(dto);
+        }
+
+        return appointmentDTOs;
+    }
+
+    @NonNull
+    private List<AppointmentResponseDTO> getAppointmentResponseDTOS(List<Appointment> appointments) {
+        List<AppointmentResponseDTO> appointmentDTOs = new ArrayList<>();
+
+        for (Appointment ap : appointments) {
+            AppointmentResponseDTO dto = new AppointmentResponseDTO();
+            dto.setBarberName(ap.getBarber().getName());
+            dto.setServiceName(ap.getServiceOffered().getName());
+            dto.setDateTime(ap.getStartTime());
+            dto.setClientName(ap.getClient().getName());
+            dto.setClientName(ap.getClient().getName());
+            dto.setClientPhoneNumber(ap.getClient().getPhoneNumber());
+            appointmentDTOs.add(dto);
+        }
+
+        return appointmentDTOs;
     }
 }
