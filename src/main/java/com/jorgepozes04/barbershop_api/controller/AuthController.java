@@ -8,7 +8,6 @@ import com.jorgepozes04.barbershop_api.service.AuthService;
 import com.jorgepozes04.barbershop_api.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

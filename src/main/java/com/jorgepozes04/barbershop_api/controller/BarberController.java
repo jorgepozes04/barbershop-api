@@ -2,7 +2,9 @@ package com.jorgepozes04.barbershop_api.controller;
 
 import com.jorgepozes04.barbershop_api.dto.BarberDTO;
 import com.jorgepozes04.barbershop_api.dto.BarberResponseDTO;
+import com.jorgepozes04.barbershop_api.dto.WorkScheduleDTO;
 import com.jorgepozes04.barbershop_api.service.BarberService;
+import com.jorgepozes04.barbershop_api.service.WorkScheduleService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,14 @@ import java.util.List;
 @AllArgsConstructor
 public class BarberController {
     private final BarberService barberService;
+    private final WorkScheduleService scheduleService;
+
+    @PostMapping("/{id}/schedule")
+    public ResponseEntity<WorkScheduleDTO> createSchedule(@PathVariable Long barberID,
+            @RequestBody WorkScheduleDTO dto) {
+        WorkScheduleDTO savedSchedule = scheduleService.createSchedule(barberID, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedSchedule);
+    }
 
     @PostMapping
     public ResponseEntity<BarberResponseDTO> createBarber(@RequestBody BarberDTO barberDTO) {
@@ -58,7 +68,8 @@ public class BarberController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<BarberResponseDTO> updateBarber(@PathVariable Long id, @RequestBody @Valid BarberDTO barberDTO) {
+    public ResponseEntity<BarberResponseDTO> updateBarber(@PathVariable Long id,
+            @RequestBody @Valid BarberDTO barberDTO) {
         try {
             BarberResponseDTO updatedBarber = barberService.updateBarber(id, barberDTO);
             return ResponseEntity.ok(updatedBarber);

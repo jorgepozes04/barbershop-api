@@ -8,7 +8,6 @@ import com.jorgepozes04.barbershop_api.enums.Role;
 import com.jorgepozes04.barbershop_api.repository.BarberRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

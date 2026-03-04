@@ -1,6 +1,5 @@
 package com.jorgepozes04.barbershop_api.repository;
 
-import com.jorgepozes04.barbershop_api.entities.Appointment;
 import com.jorgepozes04.barbershop_api.entities.WorkSchedule;
 import com.jorgepozes04.barbershop_api.enums.Day;
 import org.springframework.data.jpa.repository.JpaRepository;
