@@ -8,6 +8,8 @@ import com.jorgepozes04.barbershop_api.service.AuthService;
 import com.jorgepozes04.barbershop_api.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,25 +21,39 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final AuthService authService;
 
+    /**
+     * Authenticate user and generate JWT token
+     */
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDTO> login(@RequestBody @Valid LoginDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword());
+        log.info("User login attempt with username: {}", data.getUsername());
+
+        var usernamePassword = new UsernamePasswordAuthenticationToken(
+                data.getUsername(),
+                data.getPassword());
         var auth = authenticationManager.authenticate(usernamePassword);
 
         var token = tokenService.generateToken((UserCredentials) auth.getPrincipal());
+        log.info("User authenticated successfully: {}", data.getUsername());
 
         return ResponseEntity.ok(new TokenResponseDTO(token));
     }
 
+    /**
+     * Register a new client with authentication
+     */
     @PostMapping("/client-signup")
     public ResponseEntity<Void> registerClient(@RequestBody @Valid ClientSignupDTO data) {
+        log.info("Client signup attempt with CPF: {}", data.getCpf());
         authService.registerClient(data.getCpf(), data.getPassword(), data.getName(), data.getPhoneNumber());
-        return ResponseEntity.ok().build();
+        log.info("Client registered successfully with CPF: {}", data.getCpf());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
