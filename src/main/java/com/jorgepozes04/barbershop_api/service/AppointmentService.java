@@ -38,16 +38,16 @@ public class AppointmentService {
      * Computes available appointment slots for a barber on a specific date,
      * considering work schedule, break time, and existing appointments.
      *
-     * @param barberID the barber's ID
+     * @param barberID  the barber's ID
      * @param serviceID the service ID to determine duration
-     * @param date the appointment date
+     * @param date      the appointment date
      * @return list of available start times
      * @throws ResourceNotFoundException if barber or service not found
-     * @throws BadRequestException if barber not available on that day
+     * @throws BadRequestException       if barber not available on that day
      */
     public List<LocalTime> getAvailableTimeSlots(Long barberID, Long serviceID, LocalDate date) {
         Day weekDay = Day.valueOf(date.getDayOfWeek().name());
-        
+
         WorkSchedule schedule = workScheduleRepository.findByBarberIdAndDayOfWeek(barberID, weekDay)
                 .orElseThrow(() -> new BadRequestException("Barber is not working on this day"));
 
@@ -56,7 +56,8 @@ public class AppointmentService {
 
         LocalDateTime startOfDay = date.atTime(schedule.getStartTime());
         LocalDateTime endOfDay = date.atTime(schedule.getEndTime());
-        List<Appointment> existingAppointments = appointmentRepository.findByBarberIdAndStartTimeBetween(barberID, startOfDay, endOfDay);
+        List<Appointment> existingAppointments = appointmentRepository.findByBarberIdAndStartTimeBetween(barberID,
+                startOfDay, endOfDay);
 
         List<LocalTime> availableSlots = new ArrayList<>();
         LocalTime currentTime = schedule.getStartTime();
@@ -98,8 +99,8 @@ public class AppointmentService {
      *
      * @param dto appointment booking details
      * @return the created appointment
-     * @throws ValidationException if input is invalid
-     * @throws BadRequestException if time slot is unavailable
+     * @throws ValidationException       if input is invalid
+     * @throws BadRequestException       if time slot is unavailable
      * @throws ResourceNotFoundException if resources not found
      */
     @Transactional

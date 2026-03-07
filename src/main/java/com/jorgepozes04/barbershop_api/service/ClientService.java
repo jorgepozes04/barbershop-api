@@ -75,11 +75,11 @@ public class ClientService {
     /**
      * Updates client information.
      *
-     * @param id the client's ID
+     * @param id        the client's ID
      * @param clientDTO the updated client data
      * @return the updated client data transfer object
      * @throws ResourceNotFoundException if client not found
-     * @throws ValidationException if validation fails
+     * @throws ValidationException       if validation fails
      */
     @Transactional
     public ClientDTO updateClient(Long id, @Valid ClientDTO clientDTO) {

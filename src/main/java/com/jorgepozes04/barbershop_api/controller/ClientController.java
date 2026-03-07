@@ -77,7 +77,7 @@ public class ClientController {
     /**
      * Updates client information.
      *
-     * @param id the client's ID
+     * @param id        the client's ID
      * @param clientDTO the updated client data
      * @return the updated client
      */

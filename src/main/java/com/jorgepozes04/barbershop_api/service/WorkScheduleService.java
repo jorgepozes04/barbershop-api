@@ -29,10 +29,10 @@ public class WorkScheduleService {
      * Creates a work schedule for a barber on a specific day.
      *
      * @param barberId the barber's ID
-     * @param dto the schedule details
+     * @param dto      the schedule details
      * @return the created schedule
-     * @throws ValidationException if validation fails
-     * @throws ConflictException if schedule already exists for that day
+     * @throws ValidationException       if validation fails
+     * @throws ConflictException         if schedule already exists for that day
      * @throws ResourceNotFoundException if barber not found
      */
     @Transactional

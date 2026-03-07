@@ -23,9 +23,9 @@ public class AppointmentController {
     /**
      * Retrieves available appointment slots for a barber.
      *
-     * @param barberID the barber's ID
+     * @param barberID  the barber's ID
      * @param serviceID the service ID
-     * @param date the appointment date
+     * @param date      the appointment date
      * @return list of available start times
      */
     @GetMapping("/available-slots")
