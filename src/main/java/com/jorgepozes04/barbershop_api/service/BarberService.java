@@ -79,22 +79,18 @@ public class BarberService {
     }
 
     public List<BarberResponseDTO> getAllBarbers() {
-        log.debug("Fetching all barbers");
-        List<Barber> barbers = barberRepository.findAll();
-        return barbers.stream()
+        return barberRepository.findAll().stream()
                 .map(barberMapper::toResponseDTO)
                 .toList();
     }
 
     public BarberResponseDTO getBarberById(Long id) {
-        log.debug("Fetching barber by ID: {}", id);
         Barber barber = barberRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Barber not found with ID: " + id));
         return barberMapper.toResponseDTO(barber);
     }
 
     public BarberResponseDTO getBarberByCpf(String cpf) {
-        log.debug("Fetching barber by CPF: {}", cpf);
         Barber barber = barberRepository.findByCpf(cpf)
                 .orElseThrow(() -> new ResourceNotFoundException("Barber not found with CPF: " + cpf));
         return barberMapper.toResponseDTO(barber);
@@ -106,8 +102,6 @@ public class BarberService {
         Barber barber = barberRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Barber not found with ID: " + id));
         barberRepository.delete(barber);
-        log.info("Barber deleted successfully with ID: {}", id);
-    }
 
     @Transactional
     public BarberResponseDTO updateBarber(Long id, @Valid BarberDTO barberDTO) {
