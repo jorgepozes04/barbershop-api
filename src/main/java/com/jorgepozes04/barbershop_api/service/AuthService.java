@@ -6,7 +6,6 @@ import com.jorgepozes04.barbershop_api.enums.Role;
 import com.jorgepozes04.barbershop_api.exception.ConflictException;
 import com.jorgepozes04.barbershop_api.exception.ValidationException;
 import com.jorgepozes04.barbershop_api.repository.ClientRepository;
-import com.jorgepozes04.barbershop_api.repository.UserCredentialsRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserCredentialsRepository userCredentialsRepository;
     private final ClientRepository clientRepository;
 
     /**

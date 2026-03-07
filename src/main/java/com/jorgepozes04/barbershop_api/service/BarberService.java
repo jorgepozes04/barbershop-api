@@ -102,7 +102,7 @@ public class BarberService {
         Barber barber = barberRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Barber not found with ID: " + id));
         barberRepository.delete(barber);
-
+    }
     @Transactional
     public BarberResponseDTO updateBarber(Long id, @Valid BarberDTO barberDTO) {
         log.info("Updating barber with ID: {}", id);

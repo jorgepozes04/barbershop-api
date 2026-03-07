@@ -7,18 +7,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ServiceOfferedController.class)
 @DisplayName("ServiceOfferedController Tests")
@@ -27,7 +29,7 @@ class ServiceOfferedControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ServiceOfferedService serviceOfferedService;
 
     @Autowired
@@ -40,7 +42,7 @@ class ServiceOfferedControllerTest {
         testServiceDTO = new ServiceOfferedDTO();
         testServiceDTO.setName("Haircut");
         testServiceDTO.setDescription("Professional haircut");
-        testServiceDTO.setPrice(50.0);
+        testServiceDTO.setPrice(BigDecimal.valueOf(50.0));
         testServiceDTO.setDuration(30);
     }
 
@@ -102,7 +104,7 @@ class ServiceOfferedControllerTest {
     @DisplayName("Should update service successfully")
     void testUpdateServiceSuccess() throws Exception {
         // Arrange
-        testServiceDTO.setPrice(60.0);
+        testServiceDTO.setPrice(BigDecimal.valueOf(60.0));
         when(serviceOfferedService.updateService(eq(1L), any(ServiceOfferedDTO.class))).thenReturn(testServiceDTO);
 
         // Act & Assert

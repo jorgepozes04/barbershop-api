@@ -27,4 +27,7 @@ public class ErrorResponse {
         this.message = message;
         this.path = path;
     }
+
+    public ErrorResponse() {
+    }
 }

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
+
 @DisplayName("Exception Classes Tests")
 class ExceptionClassesTest {
 
@@ -72,7 +74,7 @@ class ExceptionClassesTest {
     @DisplayName("Should create ErrorResponse with status and message")
     void testErrorResponse() {
         // Arrange
-        String timestamp = "2026-03-07T10:00:00";
+        LocalDateTime timestamp = LocalDateTime.of(2026, 03, 07, 10, 00, 00);
         String message = "Error occurred";
         int status = 400;
         String error = "Bad Request";

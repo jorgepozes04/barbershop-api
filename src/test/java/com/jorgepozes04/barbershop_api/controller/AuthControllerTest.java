@@ -1,26 +1,23 @@
 package com.jorgepozes04.barbershop_api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jorgepozes04.barbershop_api.dto.LoginDTO;
-import com.jorgepozes04.barbershop_api.dto.TokenResponseDTO;
 import com.jorgepozes04.barbershop_api.dto.ClientSignupDTO;
+import com.jorgepozes04.barbershop_api.dto.LoginDTO;
 import com.jorgepozes04.barbershop_api.service.AuthService;
 import com.jorgepozes04.barbershop_api.service.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthController.class)
 @DisplayName("AuthController Tests")
@@ -29,10 +26,10 @@ class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private AuthService authService;
 
-    @MockBean
+    @MockitoBean
     private TokenService tokenService;
 
     @Autowired
@@ -96,11 +93,6 @@ class AuthControllerTest {
     @Test
     @DisplayName("Should login user successfully")
     void testLoginSuccess() throws Exception {
-        // Arrange
-        String token = "jwt-token";
-        // Mock the login behavior based on your implementation
-
-        // Act & Assert
         mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginDTO)))

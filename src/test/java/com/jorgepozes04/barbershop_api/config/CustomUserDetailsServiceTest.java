@@ -14,8 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +42,7 @@ class CustomUserDetailsServiceTest {
     @DisplayName("Should load user by username successfully")
     void testLoadUserByUsernameSuccess() {
         // Arrange
-        when(userCredentialsRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
+        when(userCredentialsRepository.findByUsername("testuser")).thenReturn(testUser);
 
         // Act
         UserDetails userDetails = customUserDetailsService.loadUserByUsername("testuser");
@@ -58,7 +56,7 @@ class CustomUserDetailsServiceTest {
     @DisplayName("Should throw UsernameNotFoundException when user not found")
     void testLoadUserByUsernameNotFound() {
         // Arrange
-        when(userCredentialsRepository.findByUsername("nonexistent")).thenReturn(Optional.empty());
+        when(userCredentialsRepository.findByUsername("nonexistent")).thenReturn(null);
 
         // Act & Assert
         assertThrows(UsernameNotFoundException.class,
@@ -75,7 +73,7 @@ class CustomUserDetailsServiceTest {
         barber.setPassword("barberPassword");
         barber.setRole(Role.BARBER);
 
-        when(userCredentialsRepository.findByUsername("barber1")).thenReturn(Optional.of(barber));
+        when(userCredentialsRepository.findByUsername("barber1")).thenReturn(barber);
 
         // Act
         UserDetails userDetails = customUserDetailsService.loadUserByUsername("barber1");

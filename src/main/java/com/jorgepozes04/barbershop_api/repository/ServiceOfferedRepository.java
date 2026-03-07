@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ServiceOfferedRepository extends JpaRepository<ServiceOffered, Long> {
     List<ServiceOffered> findByBarbershopId(Long barbershopId);
+
+    Object findByNameIgnoreCase(String string);
 }

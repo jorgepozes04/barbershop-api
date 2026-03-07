@@ -26,7 +26,7 @@ public class BarberController {
     public ResponseEntity<WorkScheduleDTO> createSchedule(
             @PathVariable Long id,
             @RequestBody @Valid WorkScheduleDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.createSchedule(id, dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.createWorkSchedule(id, dto));
     }
 
     @PostMapping

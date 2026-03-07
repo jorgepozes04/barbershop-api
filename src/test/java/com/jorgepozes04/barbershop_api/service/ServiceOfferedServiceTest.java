@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -45,13 +46,13 @@ class ServiceOfferedServiceTest {
         testService.setId(1L);
         testService.setName("Haircut");
         testService.setDescription("Professional haircut");
-        testService.setPrice(50.0);
+        testService.setPrice(BigDecimal.valueOf(50));
         testService.setDuration(30);
 
         testServiceDTO = new ServiceOfferedDTO();
         testServiceDTO.setName("Haircut");
         testServiceDTO.setDescription("Professional haircut");
-        testServiceDTO.setPrice(50.0);
+        testServiceDTO.setPrice(BigDecimal.valueOf(50));
         testServiceDTO.setDuration(30);
     }
 
@@ -116,7 +117,7 @@ class ServiceOfferedServiceTest {
     @DisplayName("Should throw ValidationException when price is negative")
     void testCreateServiceWithNegativePrice() {
         // Arrange
-        testServiceDTO.setPrice(-10.0);
+        testServiceDTO.setPrice(BigDecimal.valueOf(-10));
 
         // Act & Assert
         assertThrows(ValidationException.class, () -> serviceOfferedService.createService(testServiceDTO));
@@ -205,7 +206,7 @@ class ServiceOfferedServiceTest {
     void testUpdateServiceSuccess() {
         // Arrange
         Long id = 1L;
-        testServiceDTO.setPrice(60.0);
+        testServiceDTO.setPrice(BigDecimal.valueOf(60.0));
 
         when(serviceOfferedRepository.findById(id)).thenReturn(Optional.of(testService));
         when(serviceOfferedRepository.save(any(ServiceOffered.class))).thenReturn(testService);
