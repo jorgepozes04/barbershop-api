@@ -21,20 +21,27 @@ public class AppointmentController {
     private final AppointmentService apService;
 
     /**
-     * Get available time slots for a given barber, service, and date
+     * Retrieves available appointment slots for a barber.
+     *
+     * @param barberID the barber's ID
+     * @param serviceID the service ID
+     * @param date the appointment date
+     * @return list of available start times
      */
     @GetMapping("/available-slots")
     public ResponseEntity<List<LocalTime>> getAvailableTimeSlots(
             @RequestParam Long barberID,
             @RequestParam Long serviceID,
             @RequestParam LocalDate date) {
-        log.debug("Fetching available slots for barber {} on date {}", barberID, date);
         List<LocalTime> availableSlots = apService.getAvailableTimeSlots(barberID, serviceID, date);
         return ResponseEntity.ok(availableSlots);
     }
 
     /**
-     * Book a new appointment
+     * Creates a new appointment booking.
+     *
+     * @param request the booking details
+     * @return the created appointment
      */
     @PostMapping("/book")
     public ResponseEntity<AppointmentResponseDTO> createAppointment(
@@ -45,23 +52,27 @@ public class AppointmentController {
     }
 
     /**
-     * Get all appointments for a barber
+     * Retrieves all appointments for a barber.
+     *
+     * @param barberId the barber's ID
+     * @return list of appointments
      */
     @GetMapping("/{barberId}")
     public ResponseEntity<List<AppointmentResponseDTO>> getAllAppointmentsByBarbershop(
             @PathVariable Long barberId) {
-        log.debug("Fetching all appointments for barber {}", barberId);
         List<AppointmentResponseDTO> appointments = apService.getAllAppointmentsByBarber(barberId);
         return ResponseEntity.ok(appointments);
     }
 
     /**
-     * Get all appointments for a client
+     * Retrieves all appointments for a client.
+     *
+     * @param clientId the client's ID
+     * @return list of appointments
      */
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<AppointmentResponseDTO>> getAppointmentsByClientId(
             @PathVariable Long clientId) {
-        log.debug("Fetching all appointments for client {}", clientId);
         List<AppointmentResponseDTO> appointments = apService.getAppointmentsByClientId(clientId);
         return ResponseEntity.ok(appointments);
     }

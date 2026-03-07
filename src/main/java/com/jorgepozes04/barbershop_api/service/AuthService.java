@@ -23,28 +23,22 @@ public class AuthService {
     private final ClientRepository clientRepository;
 
     /**
-     * Register a new client with authentication credentials
+     * Registers a new client with authentication credentials.
      * 
-     * @param cpf      the client's CPF
-     * @param password the authentication password
-     * @param name     the client's full name
-     * @param phone    the client's phone number
-     * @throws ValidationException if input is invalid
-     * @throws ConflictException   if CPF is already registered
+     * @param cpf      client's CPF (unique identifier)
+     * @param password authentication password (min. 8 characters)
+     * @param name     client's full name
+     * @param phone    client's contact number
+     * @throws ValidationException if validation fails
+     * @throws ConflictException   if CPF already has credentials
      */
     @Transactional
     public void registerClient(String cpf, String password, String name, String phone) {
-        log.info("Attempting to register client with CPF: {}", cpf);
-
-        // Validate input
+        log.info("Client registration initiated: {}", cpf);
         validateRegistrationInput(cpf, password, name, phone);
 
-        // Check if CPF already has credentials
-        Client client = clientRepository.findByCpf(cpf)
-                .orElse(new Client());
-
+        Client client = clientRepository.findByCpf(cpf).orElse(new Client());
         if (client.getUserCredentials() != null) {
-            log.warn("Attempt to register client with existing credentials for CPF: {}", cpf);
             throw new ConflictException("This CPF is already registered with credentials");
         }
 
@@ -59,13 +53,9 @@ public class AuthService {
 
         client.setUserCredentials(credentials);
         clientRepository.save(client);
-
-        log.info("Client registered successfully with CPF: {}", cpf);
+        log.info("Client registration completed: {}", cpf);
     }
 
-    /**
-     * Validate registration input
-     */
     private void validateRegistrationInput(String cpf, String password, String name, String phone) {
         if (cpf == null || cpf.isBlank()) {
             throw new ValidationException("CPF is required");

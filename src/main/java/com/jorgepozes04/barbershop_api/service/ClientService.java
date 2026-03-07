@@ -21,39 +21,35 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
 
-    /**
-     * Register a new client
-     */
     @Transactional
     public ClientDTO register(ClientDTO clientDTO) {
         log.info("Registering new client with CPF: {}", clientDTO.getCpf());
         validateClientDTOInput(clientDTO);
-
-        Client client = new Client();
-        return saveAndMapToDTO(clientDTO, client);
+        return saveAndMapToDTO(clientDTO, new Client());
     }
 
-    /**
-     * Get all clients with pagination
-     */
     public Page<ClientDTO> getAllClients(Pageable pageable) {
-        log.debug("Fetching all clients with pagination");
-        Page<Client> clients = clientRepository.findAll(pageable);
-        return clients.map(clientMapper::toDTO);
+        return clientRepository.findAll(pageable).map(clientMapper::toDTO);
     }
 
     /**
-     * Get client by CPF
+     * Retrieves a client by CPF.
+     *
+     * @param cpf the client's CPF
+     * @return the client data transfer object
+     * @throws ResourceNotFoundException if client not found
      */
     public ClientDTO getClientByCpf(String cpf) {
-        log.debug("Fetching client by CPF: {}", cpf);
         Client client = clientRepository.findByCpf(cpf)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with CPF: " + cpf));
         return clientMapper.toDTO(client);
     }
 
     /**
-     * Delete client by ID
+     * Deletes a client by ID.
+     *
+     * @param id the client's ID
+     * @throws ResourceNotFoundException if client not found
      */
     @Transactional
     public void deleteClientById(Long id) {
@@ -61,51 +57,47 @@ public class ClientService {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with ID: " + id));
         clientRepository.delete(client);
-        log.info("Client deleted successfully with ID: {}", id);
     }
 
     /**
-     * Get client by ID
+     * Retrieves a client by ID.
+     *
+     * @param id the client's ID
+     * @return the client data transfer object
+     * @throws ResourceNotFoundException if client not found
      */
     public ClientDTO getClientById(Long id) {
-        log.debug("Fetching client by ID: {}", id);
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with ID: " + id));
         return clientMapper.toDTO(client);
     }
 
     /**
-     * Update client information
+     * Updates client information.
+     *
+     * @param id the client's ID
+     * @param clientDTO the updated client data
+     * @return the updated client data transfer object
+     * @throws ResourceNotFoundException if client not found
+     * @throws ValidationException if validation fails
      */
     @Transactional
     public ClientDTO updateClient(Long id, @Valid ClientDTO clientDTO) {
         log.info("Updating client with ID: {}", id);
         validateClientDTOInput(clientDTO);
-
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found with ID: " + id));
-
         return saveAndMapToDTO(clientDTO, client);
     }
 
-    /**
-     * Save client and map to DTO
-     */
     @Transactional
     private ClientDTO saveAndMapToDTO(@Valid ClientDTO clientDTO, Client client) {
         client.setName(clientDTO.getName());
         client.setCpf(clientDTO.getCpf());
         client.setPhoneNumber(clientDTO.getPhoneNumber());
-
-        Client updatedClient = clientRepository.save(client);
-        log.debug("Client saved with ID: {}", updatedClient.getId());
-
-        return clientMapper.toDTO(updatedClient);
+        return clientMapper.toDTO(clientRepository.save(client));
     }
 
-    /**
-     * Validate client DTO input
-     */
     private void validateClientDTOInput(ClientDTO clientDTO) {
         if (clientDTO == null) {
             throw new ValidationException("Client data cannot be null");

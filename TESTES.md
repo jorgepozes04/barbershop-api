@@ -7,6 +7,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 ### Testes de Serviço (`service/`)
 
 #### 1. **AuthServiceTest**
+
 - ✅ `testRegisterClientSuccess` - Registra um cliente com sucesso
 - ✅ `testRegisterClientWithExistingCredentials` - Verifica conflito ao registrar cliente existente
 - ✅ `testRegisterClientWithNullCpf` - Valida CPF nulo
@@ -20,6 +21,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 - ✅ `testRegisterClientCreatesNewClient` - Cria novo cliente se CPF não existe
 
 #### 2. **ClientServiceTest**
+
 - ✅ `testRegisterClientSuccess` - Registra cliente com sucesso
 - ✅ `testGetAllClientsSuccess` - Recupera todos os clientes com paginação
 - ✅ `testGetClientByCpfSuccess` - Busca cliente por CPF
@@ -32,6 +34,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 - ✅ `testGetAllClientsEmpty` - Retorna página vazia
 
 #### 3. **BarberServiceTest**
+
 - ✅ `testRegisterBarberSuccess` - Registra barbeiro com sucesso
 - ✅ `testRegisterBarberWithExistingCpf` - Verifica conflito ao registrar CPF existente
 - ✅ `testRegisterBarberWithNullDTO` - Valida DTO nulo
@@ -46,6 +49,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 - ✅ `testRegisterBarberSetsCorrectRole` - Verifica se role BARBER é atribuído
 
 #### 4. **TokenServiceTest**
+
 - ✅ `testGenerateTokenSuccess` - Gera token JWT válido
 - ✅ `testValidateTokenSuccess` - Valida token e extrai username
 - ✅ `testValidateInvalidToken` - Lança exceção para token inválido
@@ -58,6 +62,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 - ✅ `testTokenContainsCorrectIssuer` - Valida issuer do token
 
 #### 5. **AppointmentServiceTest**
+
 - ✅ `testGetAvailableTimeSlotsSuccess` - Retorna slots disponíveis com sucesso
 - ✅ `testGetAvailableTimeSlotsBarbernNotWorking` - Lança exceção quando barbeiro não trabalha
 - ✅ `testGetAvailableTimeSlotsServiceNotFound` - Lança exceção quando serviço não existe
@@ -66,6 +71,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 - ✅ `testGetAvailableTimeSlotsReturnEmptyList` - Retorna lista vazia quando lotado
 
 #### 6. **WorkScheduleServiceTest**
+
 - ✅ `testCreateWorkScheduleSuccess` - Cria cronograma com sucesso
 - ✅ `testCreateWorkScheduleBarbernNotFound` - Lança exceção quando barbeiro não existe
 - ✅ `testCreateWorkScheduleAlreadyExists` - Lança exceção quando cronograma já existe
@@ -79,6 +85,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 - ✅ `testDeleteWorkScheduleNotFound` - Lança exceção ao deletar cronograma inexistente
 
 #### 7. **ServiceOfferedServiceTest**
+
 - ✅ `testCreateServiceSuccess` - Cria serviço com sucesso
 - ✅ `testCreateServiceAlreadyExists` - Lança exceção quando serviço já existe
 - ✅ `testCreateServiceWithNullName` - Valida nome nulo
@@ -99,12 +106,14 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 ### Testes de Controller (`controller/`)
 
 #### 1. **AuthControllerTest**
+
 - ✅ `testRegisterClientSuccess` - Registra cliente via API
 - ✅ `testRegisterClientWithInvalidCpf` - Valida CPF inválido na requisição
 - ✅ `testRegisterClientWithInvalidPassword` - Valida senha inválida na requisição
 - ✅ `testLoginSuccess` - Login de usuário bem-sucedido
 
 #### 2. **ClientControllerTest**
+
 - ✅ `testGetAllClientsSuccess` - Lista clientes com paginação
 - ✅ `testGetClientByCpfSuccess` - Busca cliente por CPF via API
 - ✅ `testGetClientByCpfNotFound` - Retorna 404 quando cliente não existe
@@ -114,11 +123,13 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 - ✅ `testDeleteClientNotFound` - Retorna 404 ao deletar inexistente
 
 #### 3. **BarberControllerTest**
+
 - ✅ `testRegisterBarberSuccess` - Registra barbeiro via API
 - ✅ `testRegisterBarberWithInvalidData` - Valida dados inválidos
 - ✅ `testRegisterBarberWithExistingCpf` - Retorna 409 para CPF duplicado
 
 #### 4. **ServiceOfferedControllerTest**
+
 - ✅ `testCreateServiceSuccess` - Cria serviço via API
 - ✅ `testGetAllServicesSuccess` - Lista serviços via API
 - ✅ `testGetServiceByIdSuccess` - Busca serviço por ID
@@ -130,6 +141,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 ### Testes de Configuração (`config/`)
 
 #### 1. **CustomUserDetailsServiceTest**
+
 - ✅ `testLoadUserByUsernameSuccess` - Carrega usuário por username
 - ✅ `testLoadUserByUsernameNotFound` - Lança exceção quando usuário não existe
 - ✅ `testLoadBarberUserSuccess` - Carrega usuário barbeiro com role correto
@@ -137,6 +149,7 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 ### Testes de Exceções (`exception/`)
 
 #### 1. **ExceptionClassesTest**
+
 - ✅ `testValidationException` - Testa ValidationException
 - ✅ `testConflictException` - Testa ConflictException
 - ✅ `testResourceNotFoundException` - Testa ResourceNotFoundException
@@ -147,11 +160,13 @@ Bateria completa de testes unitários e de integração para a API de Barbershop
 ## Executar os Testes
 
 ### Executar todos os testes:
+
 ```bash
 mvn test
 ```
 
 ### Executar testes específicos:
+
 ```bash
 # Testes de serviço
 mvn test -Dtest=AuthServiceTest
@@ -164,6 +179,7 @@ mvn test -Dtest=ClientServiceTest
 ```
 
 ### Executar com cobertura:
+
 ```bash
 mvn test jacoco:report
 ```
@@ -179,12 +195,14 @@ mvn test jacoco:report
 ## Padrões Utilizados
 
 ### Frameworks
+
 - **JUnit 5** - Framework de testes
 - **Mockito** - Mock de dependências
 - **Spring Boot Test** - Integração com Spring
 - **MockMvc** - Testes de controllers
 
 ### Convenções
+
 - Nome do teste: `test + NomeDoMétodo + Cenário`
 - Estrutura: Arrange-Act-Assert
 - Testes parametrizados para múltiplos cenários

@@ -23,7 +23,7 @@ public class TokenService {
     private String secret;
 
     /**
-     * Generate JWT token for authenticated user
+     * Generates a JWT token with issuer, subject, and role claim.
      */
     public String generateToken(UserCredentials user) {
         try {
@@ -35,20 +35,20 @@ public class TokenService {
                     .withClaim("role", user.getRole().name())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
-            log.info("JWT token generated successfully for user: {}", user.getUsername());
+            log.info("JWT token generated: {}", user.getUsername());
             return token;
         } catch (JWTCreationException exception) {
-            log.error("Error generating JWT token", exception);
+            log.error("Token generation failed", exception);
             throw new RuntimeException("Error generating token", exception);
         }
     }
 
     /**
-     * Validate JWT token and extract username
-     * 
-     * @param token the JWT token to validate
-     * @return the username from the token
-     * @throws UnauthorizedException if token is invalid
+     * Validates JWT token signature and expiration. Returns the username claim.
+     *
+     * @param token JWT token to validate
+     * @return authenticated username
+     * @throws UnauthorizedException if token is invalid or expired
      */
     public String validateToken(String token) {
         try {
@@ -59,17 +59,14 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
-            log.debug("JWT token validated successfully for user: {}", username);
+            log.debug("Token validated: {}", username);
             return username;
         } catch (JWTVerificationException exception) {
-            log.warn("JWT token validation failed: {}", exception.getMessage());
+            log.warn("Token validation failed", exception);
             throw new UnauthorizedException("Invalid or expired token");
         }
     }
 
-    /**
-     * Generate token expiration date (2 hours from now)
-     */
     private Instant genExpirationDate() {
         return LocalDateTime.now()
                 .plusHours(2)

@@ -28,23 +28,19 @@ public class BarberService {
     private final BarberMapper barberMapper;
 
     /**
-     * Register a new barber with validation
+     * Registers a new barber with authorization credentials.
      * 
-     * @param barberDTO the barber registration data
-     * @return the registered barber response
-     * @throws ValidationException if input is invalid
-     * @throws ConflictException   if barber already exists
+     * @param barberDTO barber registration data (name, CPF, username, password)
+     * @return registered barber with assigned ID
+     * @throws ValidationException if data validation fails
+     * @throws ConflictException   if CPF already registered
      */
     @Transactional
     public BarberResponseDTO register(BarberDTO barberDTO) {
-        log.info("Registering new barber with CPF: {}", barberDTO.getCpf());
-
-        // Validate input
+        log.info("Barber registration initiated: {}", barberDTO.getCpf());
         validateBarberDTOInput(barberDTO);
 
-        // Check if barber with same CPF already exists
         if (barberRepository.findByCpf(barberDTO.getCpf()).isPresent()) {
-            log.warn("Attempt to register barber with existing CPF: {}", barberDTO.getCpf());
             throw new ConflictException("Barber with CPF " + barberDTO.getCpf() + " already exists");
         }
 
@@ -54,20 +50,16 @@ public class BarberService {
 
         UserCredentials credentials = new UserCredentials();
         credentials.setUsername(barberDTO.getUsername());
-        // FIX: Encode the password from DTO, not from credentials (which is null)
         credentials.setPassword(passwordEncoder.encode(barberDTO.getPassword()));
         credentials.setRole(Role.BARBER);
 
         barber.setUserCredentials(credentials);
         Barber savedBarber = barberRepository.save(barber);
 
-        log.info("Barber registered successfully with ID: {}", savedBarber.getId());
+        log.info("Barber registration completed: {}", savedBarber.getId());
         return barberMapper.toResponseDTO(savedBarber);
     }
 
-    /**
-     * Validate barber DTO input
-     */
     private void validateBarberDTOInput(BarberDTO barberDTO) {
         if (barberDTO == null) {
             throw new ValidationException("Barber data cannot be null");

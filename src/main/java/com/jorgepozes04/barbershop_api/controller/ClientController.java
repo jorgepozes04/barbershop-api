@@ -19,35 +19,54 @@ import org.springframework.web.bind.annotation.*;
 public class ClientController {
     private final ClientService clientService;
 
+    /**
+     * Registers a new client.
+     *
+     * @param clientDTO the client details
+     * @return the created client
+     */
     @PostMapping
     public ResponseEntity<ClientDTO> registerClient(@RequestBody @Valid ClientDTO clientDTO) {
-        log.info("Registering new client with CPF: {}", clientDTO.getCpf());
-        ClientDTO createdClient = clientService.register(clientDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdClient);
+        log.info("Client registration: {}", clientDTO.getCpf());
+        return ResponseEntity.status(HttpStatus.CREATED).body(clientService.register(clientDTO));
     }
 
     @GetMapping
     public ResponseEntity<Page<ClientDTO>> getAllClients(
             @PageableDefault(size = 10, page = 0, sort = "name") Pageable pageable) {
-        log.debug("Fetching all clients with pagination");
         Page<ClientDTO> clients = clientService.getAllClients(pageable);
         return ResponseEntity.ok(clients);
     }
 
+    /**
+     * Retrieves a client by ID.
+     *
+     * @param id the client's ID
+     * @return the client details
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ClientDTO> getClientById(@PathVariable Long id) {
-        log.debug("Fetching client by ID: {}", id);
         ClientDTO client = clientService.getClientById(id);
         return ResponseEntity.ok(client);
     }
 
+    /**
+     * Retrieves a client by CPF.
+     *
+     * @param cpf the client's CPF
+     * @return the client details
+     */
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<ClientDTO> getClientByCpf(@PathVariable String cpf) {
-        log.debug("Fetching client by CPF: {}", cpf);
         ClientDTO client = clientService.getClientByCpf(cpf);
         return ResponseEntity.ok(client);
     }
 
+    /**
+     * Deletes a client by ID.
+     *
+     * @param id the client's ID
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClientById(@PathVariable Long id) {
         log.info("Deleting client with ID: {}", id);
@@ -55,6 +74,13 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Updates client information.
+     *
+     * @param id the client's ID
+     * @param clientDTO the updated client data
+     * @return the updated client
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ClientDTO> updateClient(
             @PathVariable Long id,

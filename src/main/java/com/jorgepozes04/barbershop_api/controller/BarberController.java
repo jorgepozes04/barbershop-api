@@ -22,76 +22,43 @@ public class BarberController {
     private final BarberService barberService;
     private final WorkScheduleService scheduleService;
 
-    /**
-     * Create a work schedule for a barber
-     */
     @PostMapping("/{id}/schedule")
     public ResponseEntity<WorkScheduleDTO> createSchedule(
             @PathVariable Long id,
             @RequestBody @Valid WorkScheduleDTO dto) {
-        log.info("Creating schedule for barber ID: {}", id);
-        WorkScheduleDTO savedSchedule = scheduleService.createSchedule(id, dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedSchedule);
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.createSchedule(id, dto));
     }
 
-    /**
-     * Register a new barber
-     */
     @PostMapping
-    public ResponseEntity<BarberResponseDTO> createBarber(
-            @RequestBody @Valid BarberDTO barberDTO) {
-        log.info("Registering new barber with CPF: {}", barberDTO.getCpf());
+    public ResponseEntity<BarberResponseDTO> createBarber(@RequestBody @Valid BarberDTO barberDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(barberService.register(barberDTO));
     }
 
-    /**
-     * Get all barbers
-     */
     @GetMapping
     public ResponseEntity<List<BarberResponseDTO>> getAllBarbers() {
-        log.debug("Fetching all barbers");
         return ResponseEntity.ok(barberService.getAllBarbers());
     }
 
-    /**
-     * Get barber by ID
-     */
     @GetMapping("/{id}")
     public ResponseEntity<BarberResponseDTO> getBarberById(@PathVariable Long id) {
-        log.debug("Fetching barber by ID: {}", id);
-        BarberResponseDTO barber = barberService.getBarberById(id);
-        return ResponseEntity.ok(barber);
+        return ResponseEntity.ok(barberService.getBarberById(id));
     }
 
-    /**
-     * Get barber by CPF
-     */
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<BarberResponseDTO> getBarberByCpf(@PathVariable String cpf) {
-        log.debug("Fetching barber by CPF: {}", cpf);
-        BarberResponseDTO barber = barberService.getBarberByCpf(cpf);
-        return ResponseEntity.ok(barber);
+        return ResponseEntity.ok(barberService.getBarberByCpf(cpf));
     }
 
-    /**
-     * Delete barber by ID
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBarberById(@PathVariable Long id) {
-        log.info("Deleting barber with ID: {}", id);
         barberService.deleteBarberById(id);
         return ResponseEntity.noContent().build();
     }
 
-    /**
-     * Update barber information
-     */
     @PutMapping("/{id}")
     public ResponseEntity<BarberResponseDTO> updateBarber(
             @PathVariable Long id,
             @RequestBody @Valid BarberDTO barberDTO) {
-        log.info("Updating barber with ID: {}", id);
-        BarberResponseDTO updatedBarber = barberService.updateBarber(id, barberDTO);
-        return ResponseEntity.ok(updatedBarber);
+        return ResponseEntity.ok(barberService.updateBarber(id, barberDTO));
     }
 }

@@ -35,20 +35,19 @@ public class AppointmentService {
     private final AppointmentMapper appointmentMapper;
 
     /**
-     * Get available time slots for an appointment
-     * 
-     * @param barberID  the barber ID
-     * @param serviceID the service ID (to determine duration)
-     * @param date      the desired appointment date
-     * @return list of available LocalTime slots
+     * Computes available appointment slots for a barber on a specific date,
+     * considering work schedule, break time, and existing appointments.
+     *
+     * @param barberID the barber's ID
+     * @param serviceID the service ID to determine duration
+     * @param date the appointment date
+     * @return list of available start times
      * @throws ResourceNotFoundException if barber or service not found
-     * @throws BadRequestException       if barber not working on that day
+     * @throws BadRequestException if barber not available on that day
      */
     public List<LocalTime> getAvailableTimeSlots(Long barberID, Long serviceID, LocalDate date) {
-        log.debug("Fetching available slots for barber {} on date {}", barberID, date);
-
         Day weekDay = Day.valueOf(date.getDayOfWeek().name());
-
+        
         WorkSchedule schedule = workScheduleRepository.findByBarberIdAndDayOfWeek(barberID, weekDay)
                 .orElseThrow(() -> new BadRequestException("Barber is not working on this day"));
 
@@ -57,8 +56,7 @@ public class AppointmentService {
 
         LocalDateTime startOfDay = date.atTime(schedule.getStartTime());
         LocalDateTime endOfDay = date.atTime(schedule.getEndTime());
-        List<Appointment> existingAppointments = appointmentRepository.findByBarberIdAndStartTimeBetween(barberID,
-                startOfDay, endOfDay);
+        List<Appointment> existingAppointments = appointmentRepository.findByBarberIdAndStartTimeBetween(barberID, startOfDay, endOfDay);
 
         List<LocalTime> availableSlots = new ArrayList<>();
         LocalTime currentTime = schedule.getStartTime();
@@ -69,54 +67,50 @@ public class AppointmentService {
             LocalTime potentialEndTime = currentTime.plusMinutes(serviceDuration);
             boolean isAvailable = true;
 
-            // Check break time
+            // Conflict with break time
             if (currentTime.isBefore(schedule.getBreakEndTime())
                     && potentialEndTime.isAfter(schedule.getBreakStartTime())) {
                 isAvailable = false;
             }
 
-            // Check existing appointments
-            for (Appointment appointment : existingAppointments) {
-                LocalTime appointmentStart = appointment.getStartTime().toLocalTime();
-                LocalTime appointmentEnd = appointment.getEndTime().toLocalTime();
-
-                if (currentTime.isBefore(appointmentEnd) && potentialEndTime.isAfter(appointmentStart)) {
-                    isAvailable = false;
-                    break;
+            // Conflict with existing appointments
+            if (isAvailable) {
+                for (Appointment appointment : existingAppointments) {
+                    LocalTime appointmentStart = appointment.getStartTime().toLocalTime();
+                    LocalTime appointmentEnd = appointment.getEndTime().toLocalTime();
+                    if (currentTime.isBefore(appointmentEnd) && potentialEndTime.isAfter(appointmentStart)) {
+                        isAvailable = false;
+                        break;
+                    }
                 }
             }
 
             if (isAvailable) {
                 availableSlots.add(currentTime);
             }
-
             currentTime = currentTime.plusMinutes(15);
         }
-
-        log.debug("Found {} available slots for barber {} on date {}", availableSlots.size(), barberID, date);
         return availableSlots;
     }
 
     /**
-     * Book a new appointment
-     * 
-     * @param dto appointment guest DTO with booking details
-     * @return the booked appointment response
-     * @throws ValidationException       if input is invalid
-     * @throws BadRequestException       if time slot is not available
-     * @throws ResourceNotFoundException if barber or service not found
+     * Creates and persists a new appointment with availability validation.
+     *
+     * @param dto appointment booking details
+     * @return the created appointment
+     * @throws ValidationException if input is invalid
+     * @throws BadRequestException if time slot is unavailable
+     * @throws ResourceNotFoundException if resources not found
      */
     @Transactional
     public AppointmentResponseDTO bookAppointment(AppointmentGuestDTO dto) {
         log.info("Booking appointment for client CPF: {}", dto.getClientCpf());
-
         validateAppointmentDTO(dto);
 
         ServiceOffered service = serviceOfferedRepository.findById(dto.getServiceId())
                 .orElseThrow(() -> new ResourceNotFoundException("Service not found with ID: " + dto.getServiceId()));
 
         LocalDateTime endTime = dto.getDateTime().plusMinutes(service.getDuration());
-
         boolean conflict = appointmentRepository.existsByBarberIdAndStartTimeLessThanAndEndTimeGreaterThan(
                 dto.getBarberId(), endTime, dto.getDateTime());
         if (conflict) {
@@ -126,7 +120,6 @@ public class AppointmentService {
 
         Client client = clientRepository.findByCpf(dto.getClientCpf())
                 .orElseGet(() -> {
-                    log.debug("Creating new client for CPF: {}", dto.getClientCpf());
                     Client newClient = new Client();
                     newClient.setPhoneNumber(dto.getClientPhoneNumber());
                     newClient.setCpf(dto.getClientCpf());
@@ -145,32 +138,23 @@ public class AppointmentService {
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
         log.info("Appointment booked successfully with ID: {}", savedAppointment.getId());
-
         return appointmentMapper.toResponseDTO(savedAppointment);
     }
 
-    /**
-     * Get all appointments for a barber
-     */
     public List<AppointmentResponseDTO> getAllAppointmentsByBarber(Long barberId) {
-        log.debug("Fetching all appointments for barber ID: {}", barberId);
-        List<Appointment> appointments = appointmentRepository.findByBarberId(barberId);
-        return appointmentMapper.toResponseDTOs(appointments);
+        return appointmentRepository.findByBarberId(barberId)
+                .stream()
+                .map(appointmentMapper::toResponseDTO)
+                .toList();
     }
 
-    /**
-     * Get all appointments for a client
-     */
     public List<AppointmentResponseDTO> getAppointmentsByClientId(Long clientId) {
-        log.debug("Fetching all appointments for client ID: {}", clientId);
-        // Use repository method instead of loadAll + filter (N+1 query optimization)
-        List<Appointment> appointments = appointmentRepository.findByClientId(clientId);
-        return appointmentMapper.toResponseDTOs(appointments);
+        return appointmentRepository.findByClientId(clientId)
+                .stream()
+                .map(appointmentMapper::toResponseDTO)
+                .toList();
     }
 
-    /**
-     * Validate appointment DTO input
-     */
     private void validateAppointmentDTO(AppointmentGuestDTO dto) {
         if (dto == null) {
             throw new ValidationException("Appointment data cannot be null");

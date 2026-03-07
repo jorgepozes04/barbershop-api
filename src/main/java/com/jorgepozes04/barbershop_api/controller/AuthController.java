@@ -29,31 +29,24 @@ public class AuthController {
     private final AuthService authService;
 
     /**
-     * Authenticate user and generate JWT token
+     * Authenticates user credentials and returns a JWT token.
      */
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDTO> login(@RequestBody @Valid LoginDTO data) {
-        log.info("User login attempt with username: {}", data.getUsername());
-
-        var usernamePassword = new UsernamePasswordAuthenticationToken(
-                data.getUsername(),
-                data.getPassword());
+        log.info("Authentication attempt: {}", data.getUsername());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword());
         var auth = authenticationManager.authenticate(usernamePassword);
-
         var token = tokenService.generateToken((UserCredentials) auth.getPrincipal());
-        log.info("User authenticated successfully: {}", data.getUsername());
-
         return ResponseEntity.ok(new TokenResponseDTO(token));
     }
 
     /**
-     * Register a new client with authentication
+     * Registers a new client with login credentials.
      */
     @PostMapping("/client-signup")
     public ResponseEntity<Void> registerClient(@RequestBody @Valid ClientSignupDTO data) {
-        log.info("Client signup attempt with CPF: {}", data.getCpf());
+        log.info("Client registration initiated: {}", data.getCpf());
         authService.registerClient(data.getCpf(), data.getPassword(), data.getName(), data.getPhoneNumber());
-        log.info("Client registered successfully with CPF: {}", data.getCpf());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

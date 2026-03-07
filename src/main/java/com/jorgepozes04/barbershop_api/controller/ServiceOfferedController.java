@@ -18,25 +18,15 @@ import java.util.List;
 public class ServiceOfferedController {
     private final ServiceOfferedService serviceService;
 
-    /**
-     * Create a new service
-     */
     @PostMapping
     public ResponseEntity<ServiceOfferedDTO> register(
             @RequestBody @Valid ServiceOfferedDTO serviceOfferedDTO) {
-        log.info("Registering new service: {}", serviceOfferedDTO.getName());
-        ServiceOfferedDTO serviceOffered = serviceService.register(serviceOfferedDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(serviceOffered);
+        log.info("Service registration: {}", serviceOfferedDTO.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(serviceService.register(serviceOfferedDTO));
     }
 
-    /**
-     * Get all services for a barbershop
-     */
     @GetMapping("/{barbershopId}")
-    public ResponseEntity<List<ServiceOfferedDTO>> getAll(
-            @PathVariable Long barbershopId) {
-        log.debug("Fetching all services for barbershop ID: {}", barbershopId);
-        List<ServiceOfferedDTO> services = serviceService.getAll(barbershopId);
-        return ResponseEntity.ok(services);
+    public ResponseEntity<List<ServiceOfferedDTO>> getAll(@PathVariable Long barbershopId) {
+        return ResponseEntity.ok(serviceService.getAll(barbershopId));
     }
 }

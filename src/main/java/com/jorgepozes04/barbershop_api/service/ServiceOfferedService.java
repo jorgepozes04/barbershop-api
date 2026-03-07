@@ -21,12 +21,15 @@ public class ServiceOfferedService {
     private final ServiceOfferedMapper serviceOfferedMapper;
 
     /**
-     * Register a new service
+     * Creates and persists a new service offered.
+     *
+     * @param serviceOfferedDTO the service details
+     * @return the created service
+     * @throws ValidationException if validation fails
      */
     @Transactional
     public ServiceOfferedDTO register(ServiceOfferedDTO serviceOfferedDTO) {
         log.info("Registering new service: {}", serviceOfferedDTO.getName());
-
         validateServiceDTOInput(serviceOfferedDTO);
 
         ServiceOffered service = new ServiceOffered();
@@ -37,24 +40,15 @@ public class ServiceOfferedService {
 
         ServiceOffered savedService = serviceOfferedRepository.save(service);
         log.info("Service registered successfully with ID: {}", savedService.getId());
-
         return serviceOfferedMapper.toDTO(savedService);
     }
 
-    /**
-     * Get all services for a barbershop
-     */
     public List<ServiceOfferedDTO> getAll(Long barbershopId) {
-        log.debug("Fetching all services for barbershop ID: {}", barbershopId);
-        List<ServiceOffered> services = serviceOfferedRepository.findByBarbershopId(barbershopId);
-        return services.stream()
+        return serviceOfferedRepository.findByBarbershopId(barbershopId).stream()
                 .map(serviceOfferedMapper::toDTO)
                 .toList();
     }
 
-    /**
-     * Validate service DTO input
-     */
     private void validateServiceDTOInput(ServiceOfferedDTO serviceOfferedDTO) {
         if (serviceOfferedDTO == null) {
             throw new ValidationException("Service data cannot be null");

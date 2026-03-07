@@ -89,7 +89,8 @@ class ServiceOfferedControllerTest {
     void testGetServiceByIdNotFound() throws Exception {
         // Arrange
         when(serviceOfferedService.getServiceById(999L))
-                .thenThrow(new com.jorgepozes04.barbershop_api.exception.ResourceNotFoundException("Service not found"));
+                .thenThrow(
+                        new com.jorgepozes04.barbershop_api.exception.ResourceNotFoundException("Service not found"));
 
         // Act & Assert
         mockMvc.perform(get("/services/999")

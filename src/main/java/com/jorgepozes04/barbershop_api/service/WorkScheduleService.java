@@ -26,21 +26,24 @@ public class WorkScheduleService {
     private final BarberRepository barberRepository;
 
     /**
-     * Create a work schedule for a barber
+     * Creates a work schedule for a barber on a specific day.
+     *
+     * @param barberId the barber's ID
+     * @param dto the schedule details
+     * @return the created schedule
+     * @throws ValidationException if validation fails
+     * @throws ConflictException if schedule already exists for that day
+     * @throws ResourceNotFoundException if barber not found
      */
     @Transactional
     public WorkScheduleDTO createSchedule(Long barberId, @Valid WorkScheduleDTO dto) {
         log.info("Creating work schedule for barber ID: {} on {}", barberId, dto.getDayOfWeek());
-
         validateWorkScheduleDTO(dto);
 
         Barber barber = barberRepository.findById(barberId)
                 .orElseThrow(() -> new ResourceNotFoundException("Barber not found with ID: " + barberId));
 
-        Optional<WorkSchedule> existingSchedule = workScheduleRepository.findByBarberIdAndDayOfWeek(barberId,
-                dto.getDayOfWeek());
-
-        if (existingSchedule.isPresent()) {
+        if (workScheduleRepository.findByBarberIdAndDayOfWeek(barberId, dto.getDayOfWeek()).isPresent()) {
             log.warn("Work schedule already exists for barber {} on {}", barberId, dto.getDayOfWeek());
             throw new ConflictException("WorkSchedule already exists for this day!");
         }
@@ -55,13 +58,9 @@ public class WorkScheduleService {
 
         workScheduleRepository.save(schedule);
         log.info("Work schedule created successfully for barber ID: {}", barberId);
-
         return dto;
     }
 
-    /**
-     * Validate work schedule DTO input
-     */
     private void validateWorkScheduleDTO(WorkScheduleDTO dto) {
         if (dto == null) {
             throw new ValidationException("Work schedule data cannot be null");
