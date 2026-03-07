@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/appointments/available-slots").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/barbers").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/clients").hasAnyAuthority("ROLE_ADMIN", "ROLE_BARBER")
                         .requestMatchers("/clients/me/**").hasAuthority("ROLE_CLIENT")
 
                         .anyRequest().authenticated())
